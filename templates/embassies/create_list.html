@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Nueva Lista de Embajadas/Org.</div>
+    <a href="{{ url_for('embassies.index') }}" class="btn-primary"
+        style="background-color: var(--gray-800); width: auto; display: inline-block;">Volver</a>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <form action="{{ url_for('embassies.create_list') }}" method="post">
+        <div class="form-group">
+            <label for="country_id">País de la Lista</label>
+            <select name="country_id" id="country_id" class="form-control" required>
+                {% for country in countries %}
+                <option value="{{ country.id }}">{{ country.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="name">Nombre de la Lista</label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Ej: Embajadas, Consulados, ONGs"
+                required>
+        </div>
+
+        <button type="submit" class="btn-primary">Crear Lista</button>
+    </form>
+</div>
+{% endblock %}

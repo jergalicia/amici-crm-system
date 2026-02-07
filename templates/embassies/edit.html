@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Editar Contenido</div>
+    <a href="{{ url_for('embassies.view_list', id=embassy.list_id) }}" class="btn-primary"
+        style="background-color: var(--gray-800); width: auto; display: inline-block;">Volver</a>
+</div>
+
+<div class="card" style="max-width: 800px;">
+    <form action="{{ url_for('embassies.edit_member', id=embassy.id) }}" method="post" enctype="multipart/form-data">
+        <!-- List and Country are fixed/inherited, so not editable here -->
+
+        <div class="form-group">
+            <label for="name">Nombre</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ embassy.name }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="ambassador_name">Nombre del Embajador / Representante</label>
+            <input type="text" name="ambassador_name" id="ambassador_name" class="form-control"
+                value="{{ embassy.ambassador_name or '' }}">
+        </div>
+
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+                <label for="phone">Teléfono</label>
+                <input type="text" name="phone" id="phone" class="form-control" value="{{ embassy.phone or '' }}">
+            </div>
+            <div>
+                <label for="email">Correo Electrónico</label>
+                <input type="email" name="email" id="email" class="form-control" value="{{ embassy.email or '' }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="instagram">Cuenta de Instagram</label>
+            <input type="text" name="instagram" id="instagram" class="form-control"
+                value="{{ embassy.instagram or '' }}">
+        </div>
+
+        <div class="form-group">
+            <label>Foto Actual</label>
+            {% if embassy.photo_filename %}
+            <div style="margin-bottom: 0.5rem;">
+                <img src="{{ url_for('static', filename='embassies/' + embassy.photo_filename) }}" alt="Foto"
+                    style="height: 100px; border-radius: 8px;">
+            </div>
+            {% else %}
+            <p style="color: var(--text-light); font-size: 0.9rem;">Sin foto asignada</p>
+            {% endif %}
+
+            <label for="photo" style="margin-top: 0.5rem;">Cambiar Foto (dejar en blanco para mantener)</label>
+            <input type="file" name="photo" id="photo" class="form-control" accept="image/*">
+        </div>
+
+        <button type="submit" class="btn-primary">Actualizar Contenido</button>
+    </form>
+</div>
+{% endblock %}

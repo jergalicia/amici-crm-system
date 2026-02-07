@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Embajadas y Protocolos</div>
+    {% if current_user.role in ['admin', 'coordinator'] %}
+    <a href="{{ url_for('embassies.create_list') }}" class="btn-primary"
+        style="text-decoration: none; width: auto; display: inline-block;">+ Nueva Lista</a>
+    {% endif %}
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 3rem;">
+    {% for country, country_lists in lists | groupby('country.name') %}
+    <div class="country-section">
+        <h2
+            style="border-bottom: 2px solid var(--primary-red); padding-bottom: 0.5rem; margin-bottom: 1.5rem; color: var(--dark-black);">
+            {{ country }}
+        </h2>
+
+        <div class="card-grid">
+            {% for list in country_lists %}
+            <a href="{{ url_for('embassies.view_list', id=list.id) }}" class="card"
+                style="text-decoration: none; color: inherit; display: block; border-left: 5px solid var(--primary-red);">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📂</div>
+                <h3 style="font-size: 1.2rem; margin: 0; color: var(--text-main);">{{ list.name }}</h3>
+                <div style="color: var(--text-light); font-size: 0.9rem; margin-top: 0.5rem;">
+                    {{ list.items.count() }} elementos
+                </div>
+
+                {% if current_user.role in ['admin', 'coordinator'] %}
+                <form action="{{ url_for('embassies.delete_list', id=list.id) }}" method="POST"
+                    onsubmit="return confirm('¿Eliminar esta lista y todo su contenido?');" style="margin-top: 1rem;">
+                    <button type="submit"
+                        style="background: none; border: none; font-size: 0.8rem; color: var(--text-light); cursor: pointer; text-decoration: underline;">Eliminar
+                        Carpeta</button>
+                </form>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 4rem; color: var(--text-light);">
+        No hay listas disponibles.
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

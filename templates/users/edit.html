@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Editar Usuario</div>
+    <a href="{{ url_for('users.index') }}" class="btn-primary"
+        style="text-decoration: none; width: auto; display: inline-block; background-color: var(--gray-800);">Volver</a>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <form action="{{ url_for('users.edit', id=user.id) }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="username">Nombre de Usuario</label>
+            <input type="text" name="username" id="username" class="form-control" value="{{ user.username }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-control" value="{{ user.email }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Foto de Perfil</label>
+            {% if user.profile_photo %}
+            <div style="margin-bottom: 0.5rem;">
+                <img src="{{ url_for('static', filename='users/' + user.profile_photo) }}" alt="Perfil"
+                    style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
+            </div>
+            {% endif %}
+            <input type="file" name="profile_photo" id="profile_photo" class="form-control" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña (Dejar en blanco para no cambiar)</label>
+            <input type="password" name="password" id="password" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="role">Rol</label>
+            <select name="role" id="role" class="form-control" required>
+                <option value="admin" {% if user.role=='admin' %}selected{% endif %}>Administrador</option>
+                <option value="coordinator" {% if user.role=='coordinator' %}selected{% endif %}>Coordinador</option>
+                <option value="journalist" {% if user.role=='journalist' %}selected{% endif %}>Periodista</option>
+                <option value="photographer" {% if user.role=='photographer' %}selected{% endif %}>Fotógrafo</option>
+                <option value="designer" {% if user.role=='designer' %}selected{% endif %}>Diseñador</option>
+                <option value="community_manager" {% if user.role=='community_manager' %}selected{% endif %}>Community
+                    Manager</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="country_id">País</label>
+            <select name="country_id" id="country_id" class="form-control" required>
+                {% for country in countries %}
+                <option value="{{ country.id }}" {% if user.country_id==country.id %}selected{% endif %}>{{ country.name
+                    }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="is_active">Estado</label>
+            <select name="is_active" id="is_active" class="form-control" required>
+                <option value="1" {% if user.is_active %}selected{% endif %}>Activo</option>
+                <option value="0" {% if not user.is_active %}selected{% endif %}>Inactivo</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-primary">Guardar Cambios</button>
+    </form>
+</div>
+{% endblock %}

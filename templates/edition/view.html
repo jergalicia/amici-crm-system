@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">{{ edition.title }}</div>
+    <div>
+        <span class="badge {% if edition.status == 'completed' %}badge-green{% else %}badge-red{% endif %}"
+            style="margin-right: 1rem; font-size: 1rem;">
+            {{ edition.status | capitalize }}
+        </span>
+        <a href="{{ url_for('edition.add_article', id=edition.id) }}" class="btn-primary"
+            style="text-decoration: none; width: auto; display: inline-block;">+ Agregar Artículo</a>
+        <a href="{{ url_for('edition.index') }}" class="btn-primary"
+            style="text-decoration: none; width: auto; display: inline-block; background-color: var(--gray-800);">Volver</a>
+    </div>
+</div>
+
+<div class="card-grid">
+    <div class="card">
+        <h3>Fecha de Publicación</h3>
+        <div class="value" style="font-size: 1.5rem;">{{ edition.publication_date }}</div>
+    </div>
+
+    <div class="card">
+        <h3>Carpeta Drive</h3>
+        <div class="value" style="font-size: 1rem; font-family: monospace;">{{ edition.drive_folder_id }}</div>
+        <a href="#" style="font-size: 0.8rem; color: var(--primary-red);">Abrir en Drive ↗</a>
+    </div>
+
+    <div class="card">
+        <h3>Artículos</h3>
+        <div class="value">{{ edition.articles|length }}</div>
+    </div>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 1rem;">Contenido de la Edición</h2>
+
+    {% if edition.articles %}
+    <ul style="list-style: none;">
+        {% for article in edition.articles %}
+        <li style="padding: 1rem; border-bottom: 1px solid var(--gray-100);">
+            <div style="font-weight: 600;">{{ article.title }}</div>
+            <div style="color: var(--text-light); font-size: 0.9rem;">Por: {{ article.author.username }} | Estado:
+                semiprocessed</div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div
+        style="padding: 2rem; text-align: center; color: var(--text-light); background: var(--off-white); border-radius: var(--radius-md);">
+        No hay artículos asignados a esta edición todavía.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

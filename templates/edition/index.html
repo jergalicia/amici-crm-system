@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Gestión de Ediciones</div>
+    <a href="{{ url_for('edition.create') }}" class="btn-primary"
+        style="text-decoration: none; width: auto; display: inline-block;">+ Nueva Edición</a>
+</div>
+
+<div class="card">
+    {% if editions %}
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="text-align: left; border-bottom: 2px solid var(--gray-200);">
+                <th style="padding: 1rem;">Título</th>
+                <th style="padding: 1rem;">Fecha Publicación</th>
+                <th style="padding: 1rem;">Estado</th>
+                <th style="padding: 1rem;">Drive ID</th>
+                <th style="padding: 1rem;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for edition in editions %}
+            <tr style="border-bottom: 1px solid var(--gray-100);">
+                <td style="padding: 1rem; font-weight: 500;">{{ edition.title }}</td>
+                <td style="padding: 1rem;">{{ edition.publication_date }}</td>
+                <td style="padding: 1rem;">
+                    <span class="badge {% if edition.status == 'completed' %}badge-green{% else %}badge-red{% endif %}">
+                        {{ edition.status | capitalize }}
+                    </span>
+                </td>
+                <td style="padding: 1rem; font-family: monospace; font-size: 0.8rem;">{{ edition.drive_folder_id }}</td>
+                <td style="padding: 1rem;">
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <a href="{{ url_for('edition.view', id=edition.id) }}"
+                            style="color: var(--primary-red); text-decoration: none; font-weight: 500;"
+                            title="Ver Detalles">Ver</a>
+
+                        {% if current_user.role in ['admin', 'coordinator'] %}
+                        <span style="color: var(--gray-200);">|</span>
+                        <a href="{{ url_for('edition.edit', id=edition.id) }}" style="text-decoration: none;"
+                            title="Editar">✏️</a>
+
+                        {% if not edition.articles %}
+                        <form action="{{ url_for('edition.delete', id=edition.id) }}" method="POST"
+                            style="display:inline;" onsubmit="return confirm('¿Eliminar esta edición?');">
+                            <button type="submit" style="background: none; border: none; cursor: pointer;"
+                                title="Eliminar">🗑️</button>
+                        </form>
+                        {% else %}
+                        <span title="No se puede eliminar: Tiene artículos"
+                            style="cursor: not-allowed; opacity: 0.5;">🗑️</span>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 3rem;">
+        <p style="color: var(--text-light); margin-bottom: 1rem;">No hay ediciones creadas aún.</p>
+        <a href="{{ url_for('edition.create') }}" class="btn-primary"
+            style="text-decoration: none; width: auto; display: inline-block;">Crear Primera Edición</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

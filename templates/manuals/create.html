@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Subir Nuevo Manual/Protocolo</div>
+    <a href="{{ url_for('manuals.index') }}" class="btn-primary"
+        style="background-color: var(--gray-800); width: auto; display: inline-block;">Volver</a>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <form action="{{ url_for('manuals.create') }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Nombre del Documento</label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Ej: Manual de Periodismo 2024"
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="target_role">Rol Objetivo (Quién puede verlo)</label>
+            <select name="target_role" id="target_role" class="form-control" required>
+                <option value="all">Todos</option>
+                <option value="admin">Administradores</option>
+                <option value="coordinator">Coordinadores</option>
+                <option value="journalist">Periodistas</option>
+                <option value="photographer">Fotógrafos</option>
+                <option value="designer">Diseñadores</option>
+                <option value="community_manager">Community Managers</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="file">Archivo PDF</label>
+            <input type="file" name="file" id="file" class="form-control" accept=".pdf" required>
+            <small style="color: var(--text-light);">Solo se permiten archivos PDF.</small>
+        </div>
+
+        <button type="submit" class="btn-primary">Subir Documento</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Nueva Edición</div>
+    <a href="{{ url_for('dashboard.index') }}" class="btn-primary"
+        style="text-decoration: none; width: auto; display: inline-block;">Volver</a>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <form action="{{ url_for('edition.create') }}" method="post">
+        <div class="form-group">
+            <label for="title">Título de la Edición</label>
+            <input type="text" name="title" id="title" class="form-control" placeholder="Ej: Marzo 2024 - Especial Moda"
+                required>
+        </div>
+
+        {% if current_user.role == 'admin' %}
+        <div class="form-group">
+            <label for="country_id">País</label>
+            <select name="country_id" id="country_id" class="form-control" required>
+                {% for country in countries %}
+                <option value="{{ country.id }}" {% if current_user.country_id==country.id %}selected{% endif %}>{{
+                    country.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="publication_date">Fecha de Publicación Estimada</label>
+            <input type="date" name="publication_date" id="publication_date" class="form-control" required>
+        </div>
+
+        <div
+            style="background-color: var(--gray-100); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+            <p style="font-size: 0.9rem; color: var(--text-light);">
+                <strong>Nota:</strong> Al crear la edición, se generará automáticamete una estructura de carpetas en
+                Google Drive para:
+                Artículos, Fotografía, Diseño, Videos y Redes Sociales.
+            </p>
+        </div>
+
+        <button type="submit" class="btn-primary">Crear Edición y Estructura en Drive</button>
+    </form>
+</div>
+{% endblock %}

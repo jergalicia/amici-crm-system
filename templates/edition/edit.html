@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Editar Edición</div>
+    <a href="{{ url_for('edition.index') }}" class="btn-primary"
+        style="background-color: var(--gray-800); width: auto; display: inline-block;">Volver</a>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <form action="{{ url_for('edition.edit', id=edition.id) }}" method="post">
+
+        <div class="form-group">
+            <label for="title">Título de la Edición</label>
+            <input type="text" name="title" id="title" class="form-control" value="{{ edition.title }}" required>
+        </div>
+
+        {% if current_user.role == 'admin' %}
+        <div class="form-group">
+            <label for="country_id">País</label>
+            <select name="country_id" id="country_id" class="form-control" required>
+                {% for country in countries %}
+                <option value="{{ country.id }}" {% if edition.country_id==country.id %}selected{% endif %}>{{
+                    country.name }}</option>
+                {% endfor %}
+            </select>
+            <small style="color: var(--primary-red);">Nota: Cambiar el país no moverá automáticamente los
+                artículos.</small>
+        </div>
+        {% else %}
+        <div class="form-group">
+            <label>País</label>
+            <input type="text" class="form-control" value="{{ edition.country.name }}" disabled>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="publication_date">Fecha de Publicación</label>
+            <input type="date" name="publication_date" id="publication_date" class="form-control"
+                value="{{ edition.publication_date }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Estado</label>
+            <select name="status" id="status" class="form-control">
+                <option value="planning" {% if edition.status=='planning' %}selected{% endif %}>Planning</option>
+                <option value="in_progress" {% if edition.status=='in_progress' %}selected{% endif %}>In Progress
+                </option>
+                <option value="completed" {% if edition.status=='completed' %}selected{% endif %}>Completed</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Drive ID (Solo Lectura)</label>
+            <input type="text" class="form-control" value="{{ edition.drive_folder_id }}" disabled
+                style="font-family: monospace;">
+        </div>
+
+        <button type="submit" class="btn-primary">Actualizar Edición</button>
+    </form>
+</div>
+{% endblock %}

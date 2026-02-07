@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Editar Manual/Protocolo</div>
+    <a href="{{ url_for('manuals.index') }}" class="btn-primary"
+        style="background-color: var(--gray-800); width: auto; display: inline-block;">Volver</a>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <form action="{{ url_for('manuals.edit', id=manual.id) }}" method="post">
+        <div class="form-group">
+            <label for="name">Nombre del Documento</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ manual.name }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="target_role">Rol Objetivo</label>
+            <select name="target_role" id="target_role" class="form-control" required>
+                <option value="all" {% if manual.target_role=='all' %}selected{% endif %}>Todos</option>
+                <option value="admin" {% if manual.target_role=='admin' %}selected{% endif %}>Administradores</option>
+                <option value="coordinator" {% if manual.target_role=='coordinator' %}selected{% endif %}>Coordinadores
+                </option>
+                <option value="journalist" {% if manual.target_role=='journalist' %}selected{% endif %}>Periodistas
+                </option>
+                <option value="photographer" {% if manual.target_role=='photographer' %}selected{% endif %}>Fotógrafos
+                </option>
+                <option value="designer" {% if manual.target_role=='designer' %}selected{% endif %}>Diseñadores</option>
+                <option value="community_manager" {% if manual.target_role=='community_manager' %}selected{% endif %}>
+                    Community Managers</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Archivo Actual</label>
+            <input type="text" class="form-control" value="{{ manual.filename }}" disabled>
+            <small style="color: var(--text-light);">Para cambiar el archivo, elimina este registro y crea uno
+                nuevo.</small>
+        </div>
+
+        <button type="submit" class="btn-primary">Actualizar Información</button>
+    </form>
+</div>
+{% endblock %}

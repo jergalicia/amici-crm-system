@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Agregar Artículo a {{ edition.title }}</div>
+    <a href="{{ url_for('edition.view', id=edition.id) }}" class="btn-primary"
+        style="text-decoration: none; width: auto; display: inline-block; background-color: var(--gray-800);">Volver</a>
+</div>
+
+<div class="card" style="max-width: 800px;">
+    <form action="{{ url_for('edition.add_article', id=edition.id) }}" method="post">
+        <div class="form-group">
+            <label for="title">Título del Artículo</label>
+            <input type="text" name="title" id="title" class="form-control"
+                placeholder="Ej: Entrevista Embajador Italia" required>
+        </div>
+
+        <div class="form-group">
+            <label for="author_id">Asignar a Periodista</label>
+            <select name="author_id" id="author_id" class="form-control" required>
+                <option value="" disabled selected>Seleccionar Periodista...</option>
+                {% for journalist in journalists %}
+                <option value="{{ journalist.id }}">{{ journalist.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="content">Descripción / Notas Iniciales</label>
+            <textarea name="content" id="content" class="form-control" rows="5"
+                placeholder="Instrucciones para el artículo..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="deadline">Fecha Límite</label>
+            <input type="date" name="deadline" id="deadline" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn-primary">Crear y Asignar Artículo</button>
+    </form>
+</div>
+{% endblock %}
