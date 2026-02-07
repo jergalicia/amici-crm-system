@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMICI CRM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="logo-text"><span>AMICI</span> MAG</div>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="{{ url_for('dashboard.index') }}"
+                    class="{{ 'active' if request.endpoint == 'dashboard.index' else '' }}"><i
+                        class="fas fa-home fa-fw"></i> &nbsp; Dashboard</a></li>
+            <li><a href="{{ url_for('edition.index') }}"
+                    class="{{ 'active' if 'edition' in request.endpoint else '' }}"><i class="fas fa-book fa-fw"></i>
+                    &nbsp; Ediciones</a></li>
+            <li><a href="{{ url_for('articles.index') }}"
+                    class="{{ 'active' if 'articles' in request.endpoint else '' }}"><i
+                        class="fas fa-newspaper fa-fw"></i> &nbsp; Artículos</a></li>
+            <li><a href="{{ url_for('calendar.index') }}"
+                    class="{{ 'active' if 'calendar' in request.endpoint else '' }}"><i
+                        class="fas fa-calendar-alt fa-fw"></i> &nbsp; Calendario</a></li>
+            <li><a href="{{ url_for('embassies.index') }}"
+                    class="{{ 'active' if 'embassies' in request.endpoint else '' }}"><i
+                        class="fas fa-landmark fa-fw"></i> &nbsp; Embajadas</a></li>
+            <li><a href="{{ url_for('manuals.index') }}"
+                    class="{{ 'active' if 'manuals' in request.endpoint else '' }}"><i class="fas fa-file-pdf fa-fw"></i>
+                    &nbsp; Manuales</a></li>
+
+            {% if current_user.role == 'admin' %}
+            <li><a href="{{ url_for('users.index') }}"
+                    class="{{ 'active' if 'users' in request.endpoint else '' }}"><i class="fas fa-users fa-fw"></i>
+                    &nbsp; Usuarios</a></li>
+            <li><a href="{{ url_for('countries.index') }}"
+                    class="{{ 'active' if 'countries' in request.endpoint else '' }}"><i class="fas fa-globe fa-fw"></i>
+                    &nbsp; Países</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="user-profile">
+            <div class="avatar">
+                {% if current_user.profile_photo %}
+                <img src="{{ url_for('static', filename='users/' + current_user.profile_photo) }}" alt="Avatar"
+                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                {% else %}
+                {{ current_user.username[0] | upper }}
+                {% endif %}
+            </div>
+            <div>
+                <div style="font-weight: 600;">{{ current_user.username }}</div>
+                <div style="font-size: 0.8rem; color: #9CA3AF;">{{ current_user.role | capitalize }}</div>
+                <div style="font-size: 0.75rem; color: #9CA3AF;">
+                    {% if current_user.role == 'admin' %}
+                    Global Admin
+                    {% elif current_user.country %}
+                    {{ current_user.country.name }}
+                    {% else %}
+                    Sin País
+                    {% endif %}
+                </div>
+                <a href="{{ url_for('auth.logout') }}"
+                    style="font-size: 0.8rem; color: #F87171; text-decoration: none; display: block; margin-top: 0.25rem;">Cerrar
+                    Sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div style="margin-bottom: 1rem;">
+            {% for message in messages %}
+            <div
+                style="padding: 1rem; background-color: #FEF2F2; color: #991B1B; border-radius: var(--radius-md); margin-bottom: 0.5rem; border: 1px solid #FEE2E2;">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+
+</html>

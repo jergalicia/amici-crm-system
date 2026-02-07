@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Gestión de Artículos</div>
+    <a href="{{ url_for('articles.create') }}" class="btn-primary"
+        style="text-decoration: none; width: auto; display: inline-block;">+ Nuevo Artículo</a>
+</div>
+
+<div class="card">
+    {% if articles %}
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="text-align: left; border-bottom: 2px solid var(--gray-200);">
+                <th style="padding: 1rem;">Título</th>
+                <th style="padding: 1rem;">Edición</th>
+                <th style="padding: 1rem;">Autor</th>
+                <th style="padding: 1rem;">Estado</th>
+                <th style="padding: 1rem;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in articles %}
+            <tr style="border-bottom: 1px solid var(--gray-100);">
+                <td style="padding: 1rem; font-weight: 500;">
+                    {{ article.title }}
+                    <div style="font-size: 0.8rem; color: var(--text-light);">{{ article.content[:50] }}...</div>
+                </td>
+                <td style="padding: 1rem;">{{ article.edition.title }}</td>
+                <td style="padding: 1rem;">{{ article.author.username }}</td>
+                <td style="padding: 1rem;">
+                    <span class="badge" style="background: var(--gray-200);">{{ article.status | capitalize }}</span>
+                </td>
+                <td style="padding: 1rem;">
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="{{ url_for('articles.edit', id=article.id) }}"
+                            style="text-decoration: none; font-size: 1.1rem;" title="Editar">✏️</a>
+
+                        {% if current_user.role == 'admin' or current_user.id == article.author_id %}
+                        <form action="{{ url_for('articles.delete', id=article.id) }}" method="POST"
+                            style="display:inline;" onsubmit="return confirm('¿Eliminar este artículo?');">
+                            <button type="submit"
+                                style="background: none; border: none; cursor: pointer; font-size: 1.1rem;"
+                                title="Eliminar">🗑️</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 3rem; color: var(--text-light);">
+        {% if current_user.role != 'admin' %}
+        No hay artículos para tu país aún.
+        {% else %}
+        No hay artículos registrados.
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

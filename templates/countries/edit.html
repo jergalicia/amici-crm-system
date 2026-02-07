@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Editar País</div>
+    <a href="{{ url_for('countries.index') }}" class="btn-primary"
+        style="text-decoration: none; width: auto; display: inline-block; background-color: var(--gray-800);">Volver</a>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <form action="{{ url_for('countries.edit', id=country.id) }}" method="post">
+        <div class="form-group">
+            <label for="name">Nombre del País</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ country.name }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="code">Código</label>
+            <input type="text" name="code" id="code" class="form-control" value="{{ country.code }}" maxlength="5"
+                required>
+        </div>
+
+        <div style="background-color: var(--gray-100); padding: 1rem; border-radius: var(--radius-md); margin-top: 1rem; margin-bottom: 1rem;">
+            <p style="font-size: 0.9rem; color: var(--text-light);">
+                <strong>Nota:</strong> Cambiar el código o nombre no afectará los registros existentes vinculados por ID,
+                pero asegúrate de que sea consistente.
+            </p>
+        </div>
+
+        <button type="submit" class="btn-primary">Actualizar País</button>
+    </form>
+</div>
+{% endblock %}

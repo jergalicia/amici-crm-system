@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Bienvenido, {{ current_user.username }} 👋</div>
+    <div>{{ current_user.role | capitalize }} Dashboard</div>
+</div>
+
+<div class="card-grid">
+    <div class="card">
+        <h3>Próxima Edición</h3>
+        <div class="value">Marzo '24</div>
+        <div style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--primary-red);">Faltan 12 días</div>
+    </div>
+
+    <div class="card">
+        <h3>Mis Tareas</h3>
+        <div class="value">5</div>
+        <div style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-light);">2 urgentes</div>
+    </div>
+
+    <div class="card">
+        <h3>Eventos Hoy</h3>
+        <div class="value">2</div>
+        <div style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-light);">Ver calendario</div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+    <!-- Recent Activity -->
+    <div class="card">
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Actividad Reciente</h2>
+        <ul style="list-style: none;">
+            <li
+                style="padding: 1rem 0; border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between;">
+                <div>
+                    <div style="font-weight: 500;">Nuevo artículo asignado</div>
+                    <div style="font-size: 0.85rem; color: var(--text-light);">"Entrevista Embajador Italia"</div>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-light);">Hace 2h</div>
+            </li>
+            <li
+                style="padding: 1rem 0; border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between;">
+                <div>
+                    <div style="font-weight: 500;">Fotos subidas a Drive</div>
+                    <div style="font-size: 0.85rem; color: var(--text-light);">Evento Cóctel Diplomático</div>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-light);">Hace 5h</div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Quick Actions or Stats -->
+    <div class="card">
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Accesos Rápidos</h2>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="{{ url_for('edition.index') }}" class="btn-primary"
+                style="text-decoration: none; text-align: center; background-color: var(--gray-800);">Ver Ediciones</a>
+            <a href="{{ url_for('manuals.index') }}" class="btn-primary"
+                style="text-decoration: none; text-align: center; background-color: white; color: var(--dark-black); border: 1px solid var(--gray-200);">Manuales</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

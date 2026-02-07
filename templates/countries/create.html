@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Crear Nuevo País</div>
+    <a href="{{ url_for('countries.index') }}" class="btn-primary"
+        style="text-decoration: none; width: auto; display: inline-block; background-color: var(--gray-800);">Volver</a>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <form action="{{ url_for('countries.create') }}" method="post">
+        <div class="form-group">
+            <label for="name">Nombre del País</label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Ej: Panamá" required>
+        </div>
+
+        <div class="form-group">
+            <label for="code">Código (ISO corto)</label>
+            <input type="text" name="code" id="code" class="form-control" placeholder="Ej: PA" maxlength="5" required>
+            <small style="color: var(--text-light);">Usado para referencias internas</small>
+        </div>
+
+        <button type="submit" class="btn-primary">Crear País</button>
+    </form>
+</div>
+{% endblock %}

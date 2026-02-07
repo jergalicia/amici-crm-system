@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Calendario de Eventos</div>
+    {% if current_user.role in ['admin', 'coordinator'] %}
+    <button onclick="openEventModal()" class="btn-primary" style="width: auto;">+ Nuevo Evento</button>
+    {% endif %}
+</div>
+
+<!-- Calendar Controls -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <button onclick="prevMonth()" class="btn-secondary"
+        style="padding: 0.5rem 1rem; border: 1px solid var(--gray-200); border-radius: 4px; background: white; cursor: pointer;">◀
+        Anterior</button>
+    <h2 id="currentMonthLabel" style="font-size: 1.5rem; text-transform: capitalize;">Mes Año</h2>
+    <button onclick="nextMonth()" class="btn-secondary"
+        style="padding: 0.5rem 1rem; border: 1px solid var(--gray-200); border-radius: 4px; background: white; cursor: pointer;">Siguiente
+        ▶</button>
+</div>
+
+<!-- Calendar Grid -->
+<div class="calendar-container"
+    style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden;">
+    <div class="weekdays"
+        style="display: grid; grid-template-columns: repeat(7, 1fr); background: var(--gray-100); text-align: center; font-weight: 600; padding: 0.75rem 0;">
+        <div>Dom</div>
+        <div>Lun</div>
+        <div>Mar</div>
+        <div>Mié</div>
+        <div>Jue</div>
+        <div>Vie</div>
+        <div>Sáb</div>
+    </div>
+    <div id="calendar-grid" class="days-grid" style="display: grid; grid-template-columns: repeat(7, 1fr);">
+        <!-- Days inserted via JS -->
+    </div>
+</div>
+
+<!-- Modal Create Event -->
+<div id="createEventModal" class="modal"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div class="modal-content" style="background: white; padding: 2rem; border-radius: var(--radius-lg); width: 400px;">
+        <h2 style="margin-bottom: 1rem;">Nuevo Evento</h2>
+        <form id="createEventForm" onsubmit="saveEvent(event)">
+            <div class="form-group">
+                <label>Título</label>
+                <input type="text" id="eventTitle" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Inicio</label>
+                <input type="datetime-local" id="eventStart" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Fin</label>
+                <input type="datetime-local" id="eventEnd" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Ubicación</label>
+                <input type="text" id="eventLocation" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Descripción</label>
+                <textarea id="eventDescription" class="form-control"></textarea>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button type="submit" class="btn-primary">Guardar</button>
+                <button type="button" onclick="closeModals()"
+                    style="flex: 1; border: 1px solid var(--gray-200); background: white; border-radius: var(--radius-md); cursor: pointer;">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal View Event -->
+<div id="viewEventModal" class="modal"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div class="modal-content" style="background: white; padding: 2rem; border-radius: var(--radius-lg); width: 400px;">
+        <h2 id="viewEventTitle" style="margin-bottom: 0.5rem; color: var(--primary-red);">Título</h2>
+        <div id="viewEventTime" style="margin-bottom: 1rem; font-weight: 500;"></div>
+        <div id="viewEventLocation" style="margin-bottom: 1rem; color: var(--text-light);"></div>
+        <p id="viewEventDescription"
+            style="background: var(--gray-100); padding: 1rem; border-radius: var(--radius-md);"></p>
+        <button onclick="closeModals()" class="btn-primary" style="margin-top: 1.5rem;">Cerrar</button>
+    </div>
+</div>
+
+<style>
+    .cal-day {
+        min-height: 100px;
+        border: 1px solid var(--gray-100);
+        padding: 0.5rem;
+        background: white;
+    }
+
+    .cal-day.today {
+        background-color: #FFF5F5;
+        /* Light red bg */
+    }
+
+    .event-pill {
+        background-color: var(--primary-red);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        margin-bottom: 2px;
+        cursor: pointer;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+{% endblock %}

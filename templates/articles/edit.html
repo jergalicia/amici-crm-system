@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div class="page-title">Editar Artículo</div>
+    <a href="{{ url_for('articles.index') }}" class="btn-primary"
+        style="text-decoration: none; width: auto; display: inline-block; background: var(--gray-800);">Volver</a>
+</div>
+
+<div class="card" style="max-width: 800px;">
+    <form action="{{ url_for('articles.edit', id=article.id) }}" method="post" enctype="multipart/form-data">
+
+        {% if current_user.role == 'admin' %}
+        <div class="form-group">
+            <label for="author_id">Autor</label>
+            <select name="author_id" id="author_id" class="form-control">
+                <option value="{{ article.author_id }}" selected>{{ article.author.username }} (Actual)</option>
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="edition_id">Edición</label>
+            <select name="edition_id" id="edition_id" class="form-control" required>
+                {% for edition in editions %}
+                <option value="{{ edition.id }}" {% if edition.id==article.edition_id %}selected{% endif %}>
+                    {{ edition.title }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="title">Título</label>
+            <input type="text" name="title" id="title" class="form-control" maxlength="60" value="{{ article.title }}"
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="content">Contenido</label>
+            <textarea name="content" id="content" class="form-control" rows="6" maxlength="600"
+                required>{{ article.content }}</textarea>
+            <div style="text-align: right; font-size: 0.8rem; color: var(--text-light);">
+                <span id="charCount">{{ article.content|length }}</span>/600
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Imágenes Actuales ({{ article.images.count() }})</label>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                {% for img in article.images %}
+                <div style="position: relative;">
+                    <img src="{{ url_for('static', filename=img.filename) }}"
+                        style="height: 80px; width: 80px; object-fit: cover; border-radius: 4px; border: 1px solid var(--gray-200);">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="images">Agregar Más Imágenes (Max 5 total)</label>
+            <input type="file" name="images" id="images" class="form-control" accept="image/*" multiple>
+        </div>
+
+        <button type="submit" class="btn-primary">Guardar Cambios</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('content').addEventListener('input', function () {
+        document.getElementById('charCount').textContent = this.value.length;
+    });
+</script>
+{% endblock %}
